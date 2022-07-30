@@ -16,7 +16,8 @@ namespace MultiplayerGameJam.Player
         private NetworkVariable<Vector2> _mov = new();
         private ShipController _ship;
 
-        private bool _isOnEmplacement;
+        private NetworkVariable<bool> _isOnEmplacement = new();
+        public Emplacement CurrentEmplacement { set; get; }
 
         private void Start()
         {
@@ -27,8 +28,9 @@ namespace MultiplayerGameJam.Player
             if (IsServer)
             {
                 _rb = GetComponent<Rigidbody2D>();
+                transform.parent = ShipManager.Instance.ShipParent;
+                transform.localPosition = Vector2.zero;
             }
-            transform.parent = ShipManager.Instance.ShipParent;
             _ship = ShipManager.Instance.ShipParent.GetComponent<ShipController>();
         }
 
@@ -36,10 +38,10 @@ namespace MultiplayerGameJam.Player
         {
             if (IsServer)
             {
-                if (_isOnEmplacement)
+                if (_isOnEmplacement.Value)
                 {
                     _rb.velocity = Vector2.zero;
-                    transform.position = _ship.Emplacement.transform.position;
+                    transform.position = CurrentEmplacement.transform.position;
                 }
                 else
                 {
@@ -54,24 +56,30 @@ namespace MultiplayerGameJam.Player
             _mov.Value = pos;
         }
 
+        [ServerRpc]
+        private void SetIsOnEmplacementServerRpc(bool value)
+        {
+            _isOnEmplacement.Value = value;
+        }
+
         public void OnMovement(InputAction.CallbackContext value)
         {
             if (IsLocalPlayer)
             {
                 var mov = value.ReadValue<Vector2>().normalized;
                 UpdatePositionServerRpc(mov);
-                if (mov.magnitude != 0f && _isOnEmplacement)
+                if (mov.magnitude != 0f && _isOnEmplacement.Value)
                 {
-                    _isOnEmplacement = false;
+                    SetIsOnEmplacementServerRpc(false);
                 }
             }
         }
 
         public void OnAction(InputAction.CallbackContext value)
         {
-            if (IsLocalPlayer && value.performed && _ship.Emplacement != null)
+            if (IsLocalPlayer && value.performed && CurrentEmplacement != null)
             {
-                _isOnEmplacement = true;
+                SetIsOnEmplacementServerRpc(true);
             }
         }
     }

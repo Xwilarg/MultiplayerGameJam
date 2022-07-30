@@ -9,14 +9,9 @@ namespace MultiplayerGameJam.Ship
 
         private NetworkVariable<Vector2> _mov = new();
 
-        public Emplacement Emplacement { set; get; }
-
-        private void Start()
+        private void Awake()
         {
-            if (IsServer)
-            {
-                _rb = GetComponent<Rigidbody2D>();
-            }
+            _rb = GetComponent<Rigidbody2D>();
         }
 
         private void FixedUpdate()

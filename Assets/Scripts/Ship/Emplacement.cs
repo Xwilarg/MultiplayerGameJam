@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiplayerGameJam.Player;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,21 +10,20 @@ namespace MultiplayerGameJam.Ship
         [SerializeField]
         private EmplacementType _type;
 
-        private ShipController _controller;
-
-        private void Awake()
-        {
-            _controller = transform.parent.GetComponent<ShipController>();
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            _controller.Emplacement = this;
+            if (collision.CompareTag("Player"))
+            {
+                collision.GetComponent<PlayerController>().CurrentEmplacement = this;
+            }
         }
 
-        private void OnTriggerStay2D(Collider2D collision)
+        private void OnTriggerExit2D(Collider2D collision)
         {
-            _controller.Emplacement = null;
+            if (collision.CompareTag("Player"))
+            {
+                collision.GetComponent<PlayerController>().CurrentEmplacement = null;
+            }
         }
 
         public void OnAction(InputAction.CallbackContext value)
