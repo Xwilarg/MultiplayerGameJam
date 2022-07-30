@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Minigame_A",
+                    "name": "Minigame_F",
                     "type": "Button",
                     "id": "e7b4b778-2989-4d7c-8668-c661b1989659",
                     "expectedControlType": "Button",
@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Minigame_D",
+                    "name": "Minigame_G",
                     "type": "Button",
                     "id": "1dbdf7aa-50f1-4f51-ad5c-fd099830984e",
                     "expectedControlType": "Button",
@@ -189,22 +189,22 @@
                 {
                     "name": "",
                     "id": "e28c0a76-27ba-426d-a1ec-1d851eeda10a",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Minigame_A",
+                    "action": "Minigame_F",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "7010905e-3fb3-4641-a19b-b75e69b53749",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/g",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Minigame_D",
+                    "action": "Minigame_G",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

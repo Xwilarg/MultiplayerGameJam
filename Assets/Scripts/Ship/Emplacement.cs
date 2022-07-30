@@ -36,7 +36,15 @@ namespace MultiplayerGameJam.Ship
         {
             if (_type == EmplacementType.Oars)
             {
-                _controller.AddRelativeVelocityServerRpc(Vector2.up * 100f);
+                _controller.AddRelativeVelocityServerRpc(Vector2.up);
+                if (key == MinigameKeyType.F)
+                {
+                    _controller.AddTorqueServerRpc(5f);
+                }
+                else if (key == MinigameKeyType.G)
+                {
+                    _controller.AddTorqueServerRpc(-5f);
+                }
             }
             else
             {

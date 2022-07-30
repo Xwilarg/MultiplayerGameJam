@@ -281,7 +281,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: -3653393700743296757}
         m_TargetAssemblyTypeName: MultiplayerGameJam.Player.PlayerController, Assembly-CSharp
-        m_MethodName: OnMinigame_A
+        m_MethodName: OnMinigame_F
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -297,7 +297,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: -3653393700743296757}
         m_TargetAssemblyTypeName: MultiplayerGameJam.Player.PlayerController, Assembly-CSharp
-        m_MethodName: OnMinigame_D
+        m_MethodName: OnMinigame_G
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

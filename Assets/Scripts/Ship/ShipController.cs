@@ -14,18 +14,16 @@ namespace MultiplayerGameJam.Ship
             _rb = GetComponent<Rigidbody2D>();
         }
 
-        private void FixedUpdate()
-        {
-            if (IsServer)
-            {
-                _rb.velocity = _mov.Value * Time.fixedDeltaTime * 100f;
-            }
-        }
-
         [ServerRpc]
         public void AddRelativeVelocityServerRpc(Vector2 pos)
         {
-            _mov.Value = pos.y * transform.forward + pos.x * transform.right;
+            _rb.velocity = (pos.y * transform.up + pos.x * transform.right).normalized * 10f;
+        }
+
+        [ServerRpc]
+        public void AddTorqueServerRpc(float torque)
+        {
+            _rb.AddTorque(torque);
         }
     }
 }

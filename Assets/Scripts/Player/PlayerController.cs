@@ -84,19 +84,19 @@ namespace MultiplayerGameJam.Player
             }
         }
 
-        public void OnMinigame_A(InputAction.CallbackContext value)
+        public void OnMinigame_F(InputAction.CallbackContext value)
         {
             if (IsLocalPlayer && value.performed && _isOnEmplacement.Value)
             {
-                CurrentEmplacement.OnAction(MinigameKeyType.A);
+                CurrentEmplacement.OnAction(MinigameKeyType.F);
             }
         }
 
-        public void OnMinigame_D(InputAction.CallbackContext value)
+        public void OnMinigame_G(InputAction.CallbackContext value)
         {
             if (IsLocalPlayer && value.performed && _isOnEmplacement.Value)
             {
-                CurrentEmplacement.OnAction(MinigameKeyType.D);
+                CurrentEmplacement.OnAction(MinigameKeyType.G);
             }
         }
     }
