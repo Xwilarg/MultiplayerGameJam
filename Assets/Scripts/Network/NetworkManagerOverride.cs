@@ -1,7 +1,6 @@
 using System;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
-using UnityEngine;
 
 namespace MultiplayerGameJam.Network
 {
