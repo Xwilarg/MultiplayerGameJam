@@ -1,4 +1,6 @@
 ﻿using MultiplayerGameJam.Player;
+using MultiplayerGameJam.Translation;
+using MultiplayerGameJam.UI;
 using System;
 using UnityEngine;
 
@@ -29,7 +31,17 @@ namespace MultiplayerGameJam.Ship
             if (collision.CompareTag("Player"))
             {
                 collision.GetComponent<PlayerController>().CurrentEmplacement = null;
+                UIManager.Instance.SetExplanationText(string.Empty);
             }
+        }
+
+        public void DisplayExplanations()
+        {
+            UIManager.Instance.SetExplanationText(_type switch
+            {
+                EmplacementType.Oars => Translate.Instance.Tr("oarsInfo", "F", "G"),
+                _ => throw new NotImplementedException()
+            });
         }
 
         public void OnAction(MinigameKeyType key)
@@ -37,13 +49,14 @@ namespace MultiplayerGameJam.Ship
             if (_type == EmplacementType.Oars)
             {
                 _controller.AddRelativeVelocityServerRpc(Vector2.up);
+                const float torqueValue = 25f;
                 if (key == MinigameKeyType.F)
                 {
-                    _controller.AddTorqueServerRpc(5f);
+                    _controller.AddTorqueServerRpc(torqueValue);
                 }
                 else if (key == MinigameKeyType.G)
                 {
-                    _controller.AddTorqueServerRpc(-5f);
+                    _controller.AddTorqueServerRpc(-torqueValue);
                 }
             }
             else

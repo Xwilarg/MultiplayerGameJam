@@ -81,6 +81,7 @@ namespace MultiplayerGameJam.Player
             if (IsLocalPlayer && value.performed && CurrentEmplacement != null)
             {
                 SetIsOnEmplacementServerRpc(true);
+                CurrentEmplacement.DisplayExplanations();
             }
         }
 
