@@ -7,34 +7,31 @@ namespace MultiplayerGameJam.Player
     public class PlayerController : NetworkBehaviour
     {
         private Rigidbody2D _rb;
-        private Vector2 _mov;
 
         private void Start()
         {
-            if (!IsLocalPlayer)
+            if (IsLocalPlayer)
+            {
+                _rb = GetComponent<Rigidbody2D>();
+            }
+            else
             {
                 GetComponentInChildren<Camera>().gameObject.SetActive(false);
-                return;
             }
-            _rb = GetComponent<Rigidbody2D>();
         }
 
-        private void Update()
+        [ServerRpc]
+        private void UpdatePositionServerRpc(Vector2 pos)
         {
-            if (!IsLocalPlayer)
-            {
-                return;
-            }
-            _rb.velocity = _mov;
+            _rb.velocity = pos;
         }
 
         public void OnMovement(InputAction.CallbackContext value)
         {
-            if (!IsLocalPlayer)
+            if (IsLocalPlayer)
             {
-                return;
+                UpdatePositionServerRpc(value.ReadValue<Vector2>().normalized);
             }
-            _mov = value.ReadValue<Vector2>().normalized;
         }
     }
 }
