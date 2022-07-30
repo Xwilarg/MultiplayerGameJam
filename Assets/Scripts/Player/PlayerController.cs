@@ -12,6 +12,7 @@ namespace MultiplayerGameJam.Player
         private PlayerInfo _info;
 
         private Rigidbody2D _rb;
+        private PlayerInput _input;
 
         private NetworkVariable<Vector2> _mov = new();
         private ShipController _ship;
@@ -80,6 +81,22 @@ namespace MultiplayerGameJam.Player
             if (IsLocalPlayer && value.performed && CurrentEmplacement != null)
             {
                 SetIsOnEmplacementServerRpc(true);
+            }
+        }
+
+        public void OnMinigame_A(InputAction.CallbackContext value)
+        {
+            if (IsLocalPlayer && value.performed && _isOnEmplacement.Value)
+            {
+                CurrentEmplacement.OnAction(MinigameKeyType.A);
+            }
+        }
+
+        public void OnMinigame_D(InputAction.CallbackContext value)
+        {
+            if (IsLocalPlayer && value.performed && _isOnEmplacement.Value)
+            {
+                CurrentEmplacement.OnAction(MinigameKeyType.D);
             }
         }
     }

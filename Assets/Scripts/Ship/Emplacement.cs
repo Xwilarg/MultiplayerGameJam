@@ -1,7 +1,6 @@
 ﻿using MultiplayerGameJam.Player;
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace MultiplayerGameJam.Ship
 {
@@ -9,6 +8,13 @@ namespace MultiplayerGameJam.Ship
     {
         [SerializeField]
         private EmplacementType _type;
+
+        private ShipController _controller;
+
+        private void Awake()
+        {
+            _controller = transform.parent.GetComponent<ShipController>();
+        }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
@@ -26,14 +32,11 @@ namespace MultiplayerGameJam.Ship
             }
         }
 
-        public void OnAction(InputAction.CallbackContext value)
+        public void OnAction(MinigameKeyType key)
         {
             if (_type == EmplacementType.Oars)
             {
-                if (value.performed)
-                {
-                    var x = value.ReadValue<Vector2>().x;
-                }
+                _controller.AddRelativeVelocityServerRpc(Vector2.up * 100f);
             }
             else
             {

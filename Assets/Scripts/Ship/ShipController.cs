@@ -23,9 +23,9 @@ namespace MultiplayerGameJam.Ship
         }
 
         [ServerRpc]
-        public void AddVelocityServerRpc(Vector2 pos)
+        public void AddRelativeVelocityServerRpc(Vector2 pos)
         {
-            _mov.Value = pos;
+            _mov.Value = pos.y * transform.forward + pos.x * transform.right;
         }
     }
 }

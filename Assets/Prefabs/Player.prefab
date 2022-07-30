@@ -277,6 +277,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 2a9b08e1-1e31-4107-b097-523ec1bfd04f
     m_ActionName: Player/Action[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -3653393700743296757}
+        m_TargetAssemblyTypeName: MultiplayerGameJam.Player.PlayerController, Assembly-CSharp
+        m_MethodName: OnMinigame_A
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e7b4b778-2989-4d7c-8668-c661b1989659
+    m_ActionName: Player/Minigame_A[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -3653393700743296757}
+        m_TargetAssemblyTypeName: MultiplayerGameJam.Player.PlayerController, Assembly-CSharp
+        m_MethodName: OnMinigame_D
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1dbdf7aa-50f1-4f51-ad5c-fd099830984e
+    m_ActionName: Player/Minigame_D[/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
