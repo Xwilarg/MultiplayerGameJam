@@ -50,6 +50,17 @@ namespace MultiplayerGameJam.Ship
             {
                 throw new NotImplementedException($"Invalid type {_type}");
             }
+            if (_type == EmplacementType.Sail)
+            {
+                if (key == MinigameKeyType.F)
+                {
+                    _controller.AddTorqueServerRpc(5f);
+                }
+                else if (key == MinigameKeyType.G)
+                {
+                    _controller.AddTorqueServerRpc(-5f);
+                }
+            }
         }
     }
 }

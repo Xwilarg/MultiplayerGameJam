@@ -2,6 +2,7 @@
 {
     public enum EmplacementType
     {
-        Oars
+        Oars,
+        Sail
     }
 }
