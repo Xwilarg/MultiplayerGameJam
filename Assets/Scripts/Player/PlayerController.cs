@@ -8,22 +8,32 @@ namespace MultiplayerGameJam.Player
     {
         private Rigidbody2D _rb;
 
+        private NetworkVariable<Vector2> _mov = new();
+
         private void Start()
         {
-            if (IsLocalPlayer)
+            if (!IsLocalPlayer)
+            {
+                GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            }
+            if (IsServer)
             {
                 _rb = GetComponent<Rigidbody2D>();
             }
-            else
+        }
+
+        private void Update()
+        {
+            if (IsServer)
             {
-                GetComponentInChildren<Camera>().gameObject.SetActive(false);
+                _rb.velocity = _mov.Value;
             }
         }
 
         [ServerRpc]
         private void UpdatePositionServerRpc(Vector2 pos)
         {
-            _rb.velocity = pos;
+            _mov.Value = pos;
         }
 
         public void OnMovement(InputAction.CallbackContext value)
