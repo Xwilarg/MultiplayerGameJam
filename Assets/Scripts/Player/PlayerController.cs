@@ -1,4 +1,6 @@
-﻿using Unity.Netcode;
+﻿using MultiplayerGameJam.Ship;
+using MultiplayerGameJam.SO;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +8,9 @@ namespace MultiplayerGameJam.Player
 {
     public class PlayerController : NetworkBehaviour
     {
+        [SerializeField]
+        private PlayerInfo _info;
+
         private Rigidbody2D _rb;
 
         private NetworkVariable<Vector2> _mov = new();
@@ -20,13 +25,14 @@ namespace MultiplayerGameJam.Player
             {
                 _rb = GetComponent<Rigidbody2D>();
             }
+            transform.parent = ShipManager.Instance.ShipParent;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (IsServer)
             {
-                _rb.velocity = _mov.Value;
+                _rb.velocity = _mov.Value * Time.fixedDeltaTime * _info.Speed;
             }
         }
 
