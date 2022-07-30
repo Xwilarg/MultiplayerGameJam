@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine;
 
 namespace MultiplayerGameJam.Network
 {
@@ -18,16 +19,6 @@ namespace MultiplayerGameJam.Network
             {
                 _sessionM.AddConnection(clientId, Guid.NewGuid().ToString());
             };
-        }
-
-        public void HostAction()
-        {
-            StartHost();
-        }
-
-        public void JoinAction()
-        {
-            StartClient();
         }
     }
 }
