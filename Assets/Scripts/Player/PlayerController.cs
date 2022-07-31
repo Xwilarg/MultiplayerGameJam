@@ -40,7 +40,6 @@ namespace MultiplayerGameJam.Player
         {
             if (IsServer)
             {
-                _rb.velocity += ShipManager.Instance.ShipParent.GetComponent<Rigidbody2D>().velocity;
                 if (_isOnEmplacement.Value)
                 {
                     _rb.velocity = Vector2.zero;
@@ -50,6 +49,7 @@ namespace MultiplayerGameJam.Player
                 {
                     _rb.velocity = _mov.Value * Time.fixedDeltaTime * _info.Speed;
                 }
+                _rb.velocity += ShipManager.Instance.ShipParent.GetComponent<Rigidbody2D>().velocity;
             }
         }
 
