@@ -23,6 +23,6 @@ namespace MultiplayerGameJam.UI
             _explanationText.text = text;
         }
 
-        public string PlayerName => _playerName.text;
+        public string PlayerName => string.IsNullOrWhiteSpace(_playerName.text) ? "Unnamed Pirate" : _playerName.text;
     }
 }
