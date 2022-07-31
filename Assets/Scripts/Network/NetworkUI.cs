@@ -10,6 +10,7 @@ namespace MultiplayerGameJam.Network
 
         public void HostDebug()
         {
+            _networkManager.GetComponent<UnityTransport>().ConnectionData.Address = "127.0.0.1";
             _networkManager.StartHost();
             gameObject.SetActive(false);
         }
