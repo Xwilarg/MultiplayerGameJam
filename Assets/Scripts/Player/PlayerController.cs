@@ -1,6 +1,8 @@
 ﻿using MultiplayerGameJam.Ship;
 using MultiplayerGameJam.SO;
 using MultiplayerGameJam.UI;
+using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,11 +23,21 @@ namespace MultiplayerGameJam.Player
         private NetworkVariable<bool> _isOnEmplacement = new();
         public Emplacement CurrentEmplacement { set; get; }
 
+        private NetworkVariable<FixedString64Bytes> _name = new();
+        private TMP_Text _nameContainer;
+
         private void Start()
         {
+            _nameContainer = GetComponentInChildren<TMP_Text>();
+            _name.OnValueChanged += (sender, e) =>
+            {
+                _nameContainer.text = _name.Value.ToString();
+            };
+
             if (IsLocalPlayer)
             {
                 Camera.main.GetComponent<CameraFollow>().Target = transform;
+                UpdateNameServerRpc(UIManager.Instance.PlayerName);
             }
             if (IsServer)
             {
@@ -34,6 +46,12 @@ namespace MultiplayerGameJam.Player
                 transform.localPosition = Vector2.zero;
             }
             _ship = ShipManager.Instance.ShipParent.GetComponent<ShipController>();
+        }
+
+        [ServerRpc]
+        private void UpdateNameServerRpc(string value)
+        {
+            _name.Value = new(value);
         }
 
         private void FixedUpdate()
