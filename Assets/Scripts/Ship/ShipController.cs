@@ -29,21 +29,14 @@ namespace MultiplayerGameJam.Ship
 
         private void FixedUpdate()
         {
-            if (_sailLowered.Value)
-            {
-                accelerateBySailServerRpc();
-            }
-
-            //Ship slowed down by friction from ocean water
-            //oceanFrictionVelocityDecreaseServerRpc();
-        }
-
-        private void FixedUpdate()
-        {
             if (IsServer)
             {
                 _rb.velocity /= 1.1f;
                 _rb.angularVelocity /= 1.1f;
+                if (_sailLowered.Value)
+                {
+                    accelerateBySailServerRpc();
+                }
             }
         }
 
