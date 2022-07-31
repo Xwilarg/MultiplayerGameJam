@@ -58,6 +58,13 @@ namespace MultiplayerGameJam.Ship
                     _controller.AddTorqueServerRpc(-torqueValue);
                 }
             }
+            else if (_type == EmplacementType.Sail)
+            {
+                if (key == MinigameKeyType.F)
+                {
+                    _controller.ToggleSailServerRpc();
+                }
+            }
             else
             {
                 throw new NotImplementedException($"Invalid type {_type}");
