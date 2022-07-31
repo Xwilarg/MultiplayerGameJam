@@ -16,7 +16,7 @@ namespace MultiplayerGameJam.Ship
         private const float _oceanFrictionMagnitude = 0.05f;
 
         //Ship properties
-        private bool _sailLowered;
+        private NetworkVariable<bool> _sailLowered = new();
         private const float _maxShipVelocity = 3f;
 
         private void Awake()
@@ -24,12 +24,12 @@ namespace MultiplayerGameJam.Ship
             _rb = GetComponent<Rigidbody2D>();
             _windDirection = Vector2.up;
             _windMagnitude = 1f;
-            _sailLowered = false;
+            _sailLowered.Value = false;
         }
 
         private void FixedUpdate()
         {
-            if (_sailLowered)
+            if (_sailLowered.Value)
             {
                 accelerateBySailServerRpc();
             }
@@ -54,7 +54,7 @@ namespace MultiplayerGameJam.Ship
         [ServerRpc]
         public void ToggleSailServerRpc()
         {
-            _sailLowered = !_sailLowered;
+            _sailLowered.Value = !(_sailLowered.Value);
         }
 
         [ServerRpc]
