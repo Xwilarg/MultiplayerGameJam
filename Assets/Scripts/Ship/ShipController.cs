@@ -7,7 +7,8 @@ namespace MultiplayerGameJam.Ship
     {
         private Rigidbody2D _rb;
 
-        private NetworkVariable<Vector2> _mov = new();
+        private NetworkVariable<Vector2> _currentVelocity = new();
+        private NetworkVariable<float> _currentAngularVelocity = new();
 
         private void Awake()
         {
@@ -18,6 +19,12 @@ namespace MultiplayerGameJam.Ship
         {
             if (IsServer)
             {
+                _rb.velocity += _currentVelocity.Value;
+                _rb.angularVelocity += _currentAngularVelocity.Value;
+
+                _currentVelocity.Value = Vector2.zero;
+                _currentAngularVelocity.Value = 0f;
+
                 _rb.velocity /= 1.1f;
                 _rb.angularVelocity /= 1.1f;
             }
@@ -26,13 +33,13 @@ namespace MultiplayerGameJam.Ship
         [ServerRpc]
         public void AddRelativeVelocityServerRpc(Vector2 pos)
         {
-            _rb.velocity = (pos.y * transform.up + pos.x * transform.right).normalized * 10f;
+            _currentVelocity.Value = (pos.y * transform.up + pos.x * transform.right).normalized * 10f;
         }
 
         [ServerRpc]
         public void AddTorqueServerRpc(float torque)
         {
-            _rb.angularVelocity = torque;
+            _currentAngularVelocity.Value = torque;
         }
     }
 }
