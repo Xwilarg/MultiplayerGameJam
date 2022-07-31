@@ -23,13 +23,13 @@ namespace MultiplayerGameJam.Ship
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)] // TODO: Bad idea
         public void AddRelativeVelocityServerRpc(Vector2 pos)
         {
             _rb.velocity = (pos.y * transform.up + pos.x * transform.right).normalized * 10f;
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void AddTorqueServerRpc(float torque)
         {
             _rb.angularVelocity = torque;
