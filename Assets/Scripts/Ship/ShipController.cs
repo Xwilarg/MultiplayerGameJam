@@ -63,7 +63,6 @@ namespace MultiplayerGameJam.Ship
             Vector2 shipDirection = new Vector2(Mathf.Cos(_rb.rotation), Mathf.Sin(_rb.rotation));
             //Calculate angle between sailing direction and wind direction
             float sailingAngle =
-                Mathf.Acos(Vector2.Dot(shipDirection, _windDirection)) * 180 / Mathf.PI;
 
             //Only sail when not headwind (i.e. outside No-Go Zone)
             if (sailingAngle > 45f)
