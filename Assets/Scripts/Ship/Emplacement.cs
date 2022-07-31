@@ -36,11 +36,15 @@ namespace MultiplayerGameJam.Ship
 
         public void DisplayExplanations()
         {
-            UIManager.Instance.SetExplanationText(_type switch
-            {
-                EmplacementType.Oars => Translate.Instance.Tr("oarsInfo", "F", "G"),
-                _ => throw new NotImplementedException()
-            });
+            UIManager.Instance.SetExplanationText(
+                _type switch
+                {
+                    EmplacementType.Oars => Translate.Instance.Tr("oarsInfo", "F", "G"),
+                    EmplacementType.Sail => Translate.Instance.Tr("sailInfo", "F"),
+                    EmplacementType.Rudder => Translate.Instance.Tr("rudderInfo", "F", "G"),
+                    _ => throw new NotImplementedException()
+                }
+            );
         }
 
         public void OnAction(MinigameKeyType key)
@@ -63,6 +67,17 @@ namespace MultiplayerGameJam.Ship
                 if (key == MinigameKeyType.F)
                 {
                     _controller.ToggleSailServerRpc();
+                }
+            }
+            else if (_type == EmplacementType.Rudder)
+            {
+                if (key == MinigameKeyType.F)
+                {
+                    _controller.SteerRudderServerRpc(true);
+                }
+                else if (key == MinigameKeyType.G)
+                {
+                    _controller.SteerRudderServerRpc(false);
                 }
             }
             else

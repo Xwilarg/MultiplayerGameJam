@@ -13,10 +13,12 @@ namespace MultiplayerGameJam.Ship
         private Vector2 _windDirection;
         private float _windMagnitude;
         private const float windAccelerationCoeff = 0.1f;
-        
+
         //Ship properties
         private NetworkVariable<bool> _sailLowered = new();
+        private NetworkVariable<float> _rudderTorqueCoefficient = new();
         private const float _maxShipVelocity = 3f;
+        private const float _maxAngularVelocity = 30f;
 
         private void Awake()
         {
@@ -24,6 +26,7 @@ namespace MultiplayerGameJam.Ship
             _windDirection = Vector2.up;
             _windMagnitude = 1f;
             _sailLowered.Value = false;
+            _rudderTorqueCoefficient.Value = 0f;
         }
 
         private void FixedUpdate()
@@ -81,6 +84,21 @@ namespace MultiplayerGameJam.Ship
                 }
                 //Accelerate the ship
                 _rb.velocity = shipDirection * newSpeed;
+            }
+
+            _rb.angularVelocity += _rudderTorqueCoefficient.Value;
+        }
+
+        [ServerRpc]
+        internal void SteerRudderServerRpc(bool direction)
+        {
+            if (direction && _rudderTorqueCoefficient.Value < 20f)
+            {
+                _rudderTorqueCoefficient.Value += 0.5f;
+            }
+            else if (_rudderTorqueCoefficient.Value > -20f)
+            {
+                _rudderTorqueCoefficient.Value -= 0.5f;
             }
         }
     }
