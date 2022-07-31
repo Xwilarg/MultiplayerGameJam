@@ -103,5 +103,13 @@ namespace MultiplayerGameJam.Player
                 CurrentEmplacement.OnAction(value, MinigameKeyType.G);
             }
         }
+
+        public void OnMinigame_H(InputAction.CallbackContext value)
+        {
+            if (IsLocalPlayer && _isOnEmplacement.Value)
+            {
+                CurrentEmplacement.OnAction(value, MinigameKeyType.H);
+            }
+        }
     }
 }
