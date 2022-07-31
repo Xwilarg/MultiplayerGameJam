@@ -57,7 +57,7 @@ namespace MultiplayerGameJam.Ship
         }
 
         //Raise or lower sail
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void ToggleSailServerRpc()
         {
             _sailLowered.Value = !(_sailLowered.Value);
@@ -88,7 +88,7 @@ namespace MultiplayerGameJam.Ship
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         internal void SteerRudderServerRpc(bool direction)
         {
             if (direction && _rudderTorqueCoefficient.Value < _maxRudderTorqueCoefficient)
