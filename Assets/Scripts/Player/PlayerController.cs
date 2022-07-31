@@ -23,11 +23,7 @@ namespace MultiplayerGameJam.Player
 
         private void Start()
         {
-            if (!IsLocalPlayer)
-            {
-                GetComponentInChildren<Camera>().gameObject.SetActive(false);
-            }
-            else
+            if (IsLocalPlayer)
             {
                 Camera.main.GetComponent<CameraFollow>().Target = transform;
             }
