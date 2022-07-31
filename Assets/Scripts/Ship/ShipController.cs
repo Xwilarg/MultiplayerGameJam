@@ -39,7 +39,7 @@ namespace MultiplayerGameJam.Ship
                     accelerateBySailServerRpc();
                 }
                 _rb.angularVelocity += _rudderTorqueCoefficient.Value;
-                _rb.velocity /= 1.01f;
+                _rb.velocity /= 1.002f;
                 _rb.angularVelocity /= 1.25f;
             }
         }
