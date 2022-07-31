@@ -90,17 +90,17 @@ namespace MultiplayerGameJam.Player
 
         public void OnMinigame_F(InputAction.CallbackContext value)
         {
-            if (IsLocalPlayer && value.performed && _isOnEmplacement.Value)
+            if (IsLocalPlayer && _isOnEmplacement.Value)
             {
-                CurrentEmplacement.OnAction(MinigameKeyType.F);
+                CurrentEmplacement.OnAction(value, MinigameKeyType.F);
             }
         }
 
         public void OnMinigame_G(InputAction.CallbackContext value)
         {
-            if (IsLocalPlayer && value.performed && _isOnEmplacement.Value)
+            if (IsLocalPlayer && _isOnEmplacement.Value)
             {
-                CurrentEmplacement.OnAction(MinigameKeyType.G);
+                CurrentEmplacement.OnAction(value, MinigameKeyType.G);
             }
         }
     }
