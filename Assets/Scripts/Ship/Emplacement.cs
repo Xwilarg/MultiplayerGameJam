@@ -31,7 +31,6 @@ namespace MultiplayerGameJam.Ship
             if (collision.CompareTag("Player"))
             {
                 collision.GetComponent<PlayerController>().CurrentEmplacement = null;
-                UIManager.Instance.SetExplanationText(string.Empty);
             }
         }
 
@@ -49,7 +48,7 @@ namespace MultiplayerGameJam.Ship
             if (_type == EmplacementType.Oars)
             {
                 _controller.AddRelativeVelocityServerRpc(Vector2.up);
-                const float torqueValue = 25f;
+                const float torqueValue = 90f;
                 if (key == MinigameKeyType.F)
                 {
                     _controller.AddTorqueServerRpc(torqueValue);

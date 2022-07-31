@@ -1,5 +1,6 @@
 ﻿using MultiplayerGameJam.Ship;
 using MultiplayerGameJam.SO;
+using MultiplayerGameJam.UI;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -72,6 +73,7 @@ namespace MultiplayerGameJam.Player
                 if (mov.magnitude != 0f && _isOnEmplacement.Value)
                 {
                     SetIsOnEmplacementServerRpc(false);
+                    UIManager.Instance.SetExplanationText(string.Empty);
                 }
             }
         }

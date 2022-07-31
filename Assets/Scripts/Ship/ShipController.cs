@@ -14,6 +14,15 @@ namespace MultiplayerGameJam.Ship
             _rb = GetComponent<Rigidbody2D>();
         }
 
+        private void FixedUpdate()
+        {
+            if (IsServer)
+            {
+                _rb.velocity /= 1.1f;
+                _rb.angularVelocity /= 1.1f;
+            }
+        }
+
         [ServerRpc]
         public void AddRelativeVelocityServerRpc(Vector2 pos)
         {
@@ -23,7 +32,7 @@ namespace MultiplayerGameJam.Ship
         [ServerRpc]
         public void AddTorqueServerRpc(float torque)
         {
-            _rb.AddTorque(torque);
+            _rb.angularVelocity = torque;
         }
     }
 }
