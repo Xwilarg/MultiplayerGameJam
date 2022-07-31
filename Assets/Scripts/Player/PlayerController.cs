@@ -27,6 +27,10 @@ namespace MultiplayerGameJam.Player
             {
                 GetComponentInChildren<Camera>().gameObject.SetActive(false);
             }
+            else
+            {
+                Camera.main.GetComponent<CameraFollow>().Target = transform;
+            }
             if (IsServer)
             {
                 _rb = GetComponent<Rigidbody2D>();
