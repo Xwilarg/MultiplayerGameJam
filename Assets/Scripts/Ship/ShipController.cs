@@ -17,8 +17,8 @@ namespace MultiplayerGameJam.Ship
         //Ship properties
         private NetworkVariable<bool> _sailLowered = new();
         private NetworkVariable<float> _rudderTorqueCoefficient = new();
-        private const float _maxShipVelocity = 3f;
-        private const float _maxAngularVelocity = 30f;
+        private const float _maxShipVelocity = 9f;
+        private const float _maxRudderTorqueCoefficient = 7f;
 
         private void Awake()
         {
@@ -33,13 +33,14 @@ namespace MultiplayerGameJam.Ship
         {
             if (IsServer)
             {
-                _rb.velocity /= 1.1f;
-                _rb.angularVelocity /= 1.1f;
 
                 if (_sailLowered.Value)
                 {
                     accelerateBySailServerRpc();
                 }
+                _rb.angularVelocity += _rudderTorqueCoefficient.Value;
+                _rb.velocity /= 1.01f;
+                _rb.angularVelocity /= 1.25f;
             }
         }
 
@@ -85,20 +86,18 @@ namespace MultiplayerGameJam.Ship
                 //Accelerate the ship
                 _rb.velocity = shipDirection * newSpeed;
             }
-
-            _rb.angularVelocity += _rudderTorqueCoefficient.Value;
         }
 
         [ServerRpc]
         internal void SteerRudderServerRpc(bool direction)
         {
-            if (direction && _rudderTorqueCoefficient.Value < 20f)
+            if (direction && _rudderTorqueCoefficient.Value < _maxRudderTorqueCoefficient)
             {
-                _rudderTorqueCoefficient.Value += 0.5f;
+                _rudderTorqueCoefficient.Value += 0.03f;
             }
-            else if (_rudderTorqueCoefficient.Value > -20f)
+            else if (_rudderTorqueCoefficient.Value > -_maxRudderTorqueCoefficient)
             {
-                _rudderTorqueCoefficient.Value -= 0.5f;
+                _rudderTorqueCoefficient.Value -= 0.03f;
             }
         }
     }
