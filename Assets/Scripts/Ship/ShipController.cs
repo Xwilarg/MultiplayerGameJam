@@ -13,8 +13,7 @@ namespace MultiplayerGameJam.Ship
         private Vector2 _windDirection;
         private float _windMagnitude;
         private const float windAccelerationCoeff = 0.1f;
-        private const float _oceanFrictionMagnitude = 0.05f;
-
+        
         //Ship properties
         private NetworkVariable<bool> _sailLowered = new();
         private const float _maxShipVelocity = 3f;
@@ -29,21 +28,15 @@ namespace MultiplayerGameJam.Ship
 
         private void FixedUpdate()
         {
-            if (_sailLowered.Value)
-            {
-                accelerateBySailServerRpc();
-            }
-
-            //Ship slowed down by friction from ocean water
-            //oceanFrictionVelocityDecreaseServerRpc();
-        }
-
-        private void FixedUpdate()
-        {
             if (IsServer)
             {
                 _rb.velocity /= 1.1f;
                 _rb.angularVelocity /= 1.1f;
+
+                if (_sailLowered.Value)
+                {
+                    accelerateBySailServerRpc();
+                }
             }
         }
 
@@ -86,18 +79,6 @@ namespace MultiplayerGameJam.Ship
                 //Accelerate the ship
                 _rb.velocity = shipDirection * newSpeed;
             }
-        }
-
-        [ServerRpc (RequireOwnership = false)]
-        private void oceanFrictionVelocityDecreaseServerRpc()
-        {
-            //Subtract velocity by _oceanFrictionMagnitude to emulate ocean friction
-            float newSpeed = _rb.velocity.magnitude - _oceanFrictionMagnitude;
-            if (newSpeed < 0)
-            {
-                newSpeed = 0f;
-            }
-            _rb.velocity = _rb.velocity.normalized * newSpeed;
         }
     }
 }
