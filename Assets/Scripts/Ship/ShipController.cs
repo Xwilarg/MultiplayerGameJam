@@ -10,6 +10,9 @@ namespace MultiplayerGameJam.Ship
         private NetworkVariable<Vector2> _mov = new();
 
         private Vector2 _wind;
+        private Vector2 _windDirection;
+
+        private float _windMagnitude;
 
         private bool _sailLowered;
 
@@ -66,12 +69,13 @@ namespace MultiplayerGameJam.Ship
 
         private void oceanFrictionVelocityDecrease()
         {
-            _rb.velocity =
-                _rb.velocity.normalized * (_rb.velocity.magnitude - _oceanFrictionMagnitude);
-            if (_rb.velocity.sqrMagnitude < 0)
+            //Subtract velocity by _oceanFrictionMagnitude to emulate ocean friction
+            float newSpeed = _rb.velocity.magnitude - _oceanFrictionMagnitude;
+            if (newSpeed < 0)
             {
-                _rb.velocity = Vector2.zero;
+                newSpeed = 0f;
             }
+            _rb.velocity = _rb.velocity.normalized * newSpeed;
         }
     }
 }

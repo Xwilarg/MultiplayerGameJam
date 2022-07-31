@@ -3,6 +3,7 @@
     public enum EmplacementType
     {
         Oars,
-        Sail
+        Sail,
+        Rudder
     }
 }
