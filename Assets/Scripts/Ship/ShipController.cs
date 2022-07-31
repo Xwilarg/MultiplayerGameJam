@@ -59,10 +59,13 @@ namespace MultiplayerGameJam.Ship
             _sailLowered.Value = !(_sailLowered.Value);
         }
 
-        [ServerRpc (RequireOwnership = false)]
+        [ServerRpc(RequireOwnership = false)]
         private void accelerateBySailServerRpc()
         {
-            Vector2 shipDirection = new Vector2(-Mathf.Sin(_rb.rotation * Mathf.Deg2Rad), Mathf.Cos(_rb.rotation * Mathf.Deg2Rad));
+            Vector2 shipDirection = new Vector2(
+                -Mathf.Sin(_rb.rotation * Mathf.Deg2Rad),
+                Mathf.Cos(_rb.rotation * Mathf.Deg2Rad)
+            );
             //Calculate angle between sailing direction and wind direction
             float sailingAngle =
                 Mathf.Acos(Vector2.Dot(shipDirection, _windDirection * -1)) * 180 / Mathf.PI;
