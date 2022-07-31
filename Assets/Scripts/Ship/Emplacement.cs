@@ -46,24 +46,16 @@ namespace MultiplayerGameJam.Ship
                     _controller.AddTorqueServerRpc(-5f);
                 }
             }
-            else
-            {
-                throw new NotImplementedException($"Invalid type {_type}");
-            }
-            if (_type == EmplacementType.Sail)
+            else if (_type == EmplacementType.Sail)
             {
                 if (key == MinigameKeyType.F)
                 {
-                    _controller.ToggleSail();
+                    _controller.ToggleSailServerRpc();
                 }
-                else if (key == MinigameKeyType.G)
-                {
-                    //_controller.SteerRudder();
-                }
-                else if (key == MinigameKeyType.H)
-                {
-                     //_controller.SteerRudder();
-                }
+            }
+            else
+            {
+                throw new NotImplementedException($"Invalid type {_type}");
             }
         }
     }

@@ -9,40 +9,33 @@ namespace MultiplayerGameJam.Ship
 
         private NetworkVariable<Vector2> _mov = new();
 
-        private Vector2 _wind;
+        //Environment properties
         private Vector2 _windDirection;
-
         private float _windMagnitude;
+        private const float windAccelerationCoeff = 0.1f;
+        private const float _oceanFrictionMagnitude = 0.05f;
 
+        //Ship properties
         private bool _sailLowered;
-
-        private const float _oceanFrictionMagnitude = 0.1f;
-
-        private const float shipAccelerationCoeff = 0.3f;
-
-
-        private const float _maxVelocity = 5f;
+        private const float _maxShipVelocity = 3f;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
-            _wind = Vector2.down;
+            _windDirection = Vector2.up;
+            _windMagnitude = 1f;
             _sailLowered = false;
         }
 
         private void FixedUpdate()
         {
-            //Skip all logic if velocity is zero
-            if (_rb.velocity.SqrMagnitude() > 0)
+            if (_sailLowered)
             {
-                if (_sailLowered)
-                {
-                    accelerateByWind();
-                }
-
-                //Ship slowed down by friction from ocean water
-                oceanFrictionVelocityDecrease();
+                accelerateBySailServerRpc();
             }
+
+            //Ship slowed down by friction from ocean water
+            //oceanFrictionVelocityDecreaseServerRpc();
         }
 
         [ServerRpc]
@@ -57,17 +50,37 @@ namespace MultiplayerGameJam.Ship
             _rb.AddTorque(torque);
         }
 
-        public void toggleSail()
+        //Raise or lower sail
+        [ServerRpc]
+        public void ToggleSailServerRpc()
         {
             _sailLowered = !_sailLowered;
         }
 
-        private void accelerateByWind()
+        [ServerRpc]
+        private void accelerateBySailServerRpc()
         {
-            //ToDo: Finish adding acceleration determined by wind direction i.e. headwind calculation
+            Vector2 shipDirection = new Vector2(Mathf.Cos(_rb.rotation), Mathf.Sin(_rb.rotation));
+            //Calculate angle between sailing direction and wind direction
+            float sailingAngle =
+                Mathf.Acos(Vector2.Dot(shipDirection, _windDirection)) * 180 / Mathf.PI;
+
+            //Only sail when not headwind (i.e. outside No-Go Zone)
+            if (sailingAngle > 45f)
+            {
+                float newSpeed = _rb.velocity.magnitude + windAccelerationCoeff;
+                //Ensure that velocity does not exceed a capped value
+                if (newSpeed > _maxShipVelocity)
+                {
+                    newSpeed = _maxShipVelocity;
+                }
+                //Accelerate the ship
+                _rb.velocity = shipDirection * newSpeed;
+            }
         }
 
-        private void oceanFrictionVelocityDecrease()
+        [ServerRpc]
+        private void oceanFrictionVelocityDecreaseServerRpc()
         {
             //Subtract velocity by _oceanFrictionMagnitude to emulate ocean friction
             float newSpeed = _rb.velocity.magnitude - _oceanFrictionMagnitude;
