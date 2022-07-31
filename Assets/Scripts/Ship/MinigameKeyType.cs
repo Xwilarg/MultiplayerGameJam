@@ -3,6 +3,7 @@
     public enum MinigameKeyType
     {
         F,
-        G
+        G,
+        H
     }
 }

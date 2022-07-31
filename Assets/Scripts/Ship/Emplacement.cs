@@ -54,11 +54,15 @@ namespace MultiplayerGameJam.Ship
             {
                 if (key == MinigameKeyType.F)
                 {
-                    _controller.AddTorqueServerRpc(5f);
+                    _controller.ToggleSail();
                 }
                 else if (key == MinigameKeyType.G)
                 {
-                    _controller.AddTorqueServerRpc(-5f);
+                    //_controller.SteerRudder();
+                }
+                else if (key == MinigameKeyType.H)
+                {
+                     //_controller.SteerRudder();
                 }
             }
         }
