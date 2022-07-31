@@ -57,7 +57,7 @@ namespace MultiplayerGameJam.Ship
             _sailLowered.Value = !(_sailLowered.Value);
         }
 
-        [ServerRpc]
+        [ServerRpc (RequireOwnership = false)]
         private void accelerateBySailServerRpc()
         {
             Vector2 shipDirection = new Vector2(-Mathf.Sin(_rb.rotation * Mathf.Deg2Rad), Mathf.Cos(_rb.rotation * Mathf.Deg2Rad));
@@ -79,7 +79,7 @@ namespace MultiplayerGameJam.Ship
             }
         }
 
-        [ServerRpc]
+        [ServerRpc (RequireOwnership = false)]
         private void oceanFrictionVelocityDecreaseServerRpc()
         {
             //Subtract velocity by _oceanFrictionMagnitude to emulate ocean friction
