@@ -33,6 +33,7 @@ namespace MultiplayerGameJam.Player
             {
                 _nameContainer.text = _name.Value.ToString();
             };
+            _nameContainer.text = _name.Value.ToString();
 
             if (IsLocalPlayer)
             {
