@@ -1,6 +1,8 @@
 ﻿using MultiplayerGameJam.Ship;
 using MultiplayerGameJam.SO;
+using MultiplayerGameJam.Translation;
 using MultiplayerGameJam.UI;
+using System.Linq;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -18,6 +20,7 @@ namespace MultiplayerGameJam.Player
         private PlayerInput _input;
 
         private NetworkVariable<Vector2> _mov = new();
+        private Vector2 _direction = Vector2.up;
         private ShipController _ship;
 
         private NetworkVariable<bool> _isOnEmplacement = new();
@@ -25,6 +28,14 @@ namespace MultiplayerGameJam.Player
 
         private NetworkVariable<FixedString64Bytes> _name = new();
         private TMP_Text _nameContainer;
+
+        private int _ignorePlayerLayer;
+        private GameObject _closeShip;
+
+        private void Awake()
+        {
+            _ignorePlayerLayer = ~(1 << LayerMask.NameToLayer("Player"));
+        }
 
         private void Start()
         {
@@ -43,16 +54,40 @@ namespace MultiplayerGameJam.Player
             if (IsServer)
             {
                 _rb = GetComponent<Rigidbody2D>();
-                transform.parent = ShipManager.Instance.ShipParent;
-                transform.localPosition = Vector2.zero;
+                transform.position = GameObject.FindGameObjectWithTag("Spawn").transform.position;
             }
-            _ship = ShipManager.Instance.ShipParent.GetComponent<ShipController>();
+        }
+
+        [ServerRpc]
+        private void SetShipServerRpc(int id)
+        {
+            _ship = GameObject.FindGameObjectsWithTag("Ship").FirstOrDefault(x => x.GetComponent<ShipController>().Id.Value == id).GetComponent<ShipController>();
+            transform.parent = _ship.transform;
+            transform.localPosition = Vector2.zero;
         }
 
         [ServerRpc]
         private void UpdateNameServerRpc(string value)
         {
             _name.Value = new(value);
+        }
+
+        private void Update()
+        {
+            if (IsLocalPlayer && _ship == null)
+            {
+                var hit = Physics2D.Raycast(transform.position, _direction, 3f, _ignorePlayerLayer);
+                if (hit.collider != null && hit.collider.CompareTag("Ship"))
+                {
+                    UIManager.Instance.SetExplanationText(Translate.Instance.Tr("enterShip", "E"));
+                    _closeShip = hit.collider.gameObject;
+                }
+                else
+                {
+                    UIManager.Instance.SetExplanationText(string.Empty);
+                    _closeShip = null;
+                }
+            }
         }
 
         private void FixedUpdate()
@@ -68,7 +103,10 @@ namespace MultiplayerGameJam.Player
                 {
                     _rb.velocity = _mov.Value * Time.fixedDeltaTime * _info.Speed;
                 }
-                _rb.velocity += ShipManager.Instance.ShipParent.GetComponent<Rigidbody2D>().velocity;
+                if (_ship != null)
+                {
+                    _rb.velocity += _ship.GetComponent<Rigidbody2D>().velocity;
+                }
             }
         }
 
@@ -90,20 +128,32 @@ namespace MultiplayerGameJam.Player
             {
                 var mov = value.ReadValue<Vector2>().normalized;
                 UpdatePositionServerRpc(mov);
-                if (mov.magnitude != 0f && _isOnEmplacement.Value)
+                if (mov.magnitude != 0f)
                 {
-                    SetIsOnEmplacementServerRpc(false);
-                    UIManager.Instance.SetExplanationText(string.Empty);
+                    _direction = mov.normalized;
+                    if (_isOnEmplacement.Value)
+                    {
+                        SetIsOnEmplacementServerRpc(false);
+                        UIManager.Instance.SetExplanationText(string.Empty);
+                    }
                 }
             }
         }
 
         public void OnAction(InputAction.CallbackContext value)
         {
-            if (IsLocalPlayer && value.performed && CurrentEmplacement != null)
+            if (IsLocalPlayer)
             {
-                SetIsOnEmplacementServerRpc(true);
-                CurrentEmplacement.DisplayExplanations();
+                if (_ship == null && _closeShip != null)
+                {
+                    UIManager.Instance.SetExplanationText(string.Empty);
+                    SetShipServerRpc(_closeShip.GetComponent<ShipController>()?.Id?.Value ?? _closeShip.GetComponentInParent<ShipController>().Id.Value);
+                }
+                else if (value.performed && CurrentEmplacement != null)
+                {
+                    SetIsOnEmplacementServerRpc(true);
+                    CurrentEmplacement.DisplayExplanations();
+                }
             }
         }
 

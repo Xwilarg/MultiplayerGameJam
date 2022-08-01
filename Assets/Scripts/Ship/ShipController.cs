@@ -5,6 +5,8 @@ namespace MultiplayerGameJam.Ship
 {
     public class ShipController : NetworkBehaviour
     {
+        private static int _idStatic = 0;
+
         private Rigidbody2D _rb;
 
         private NetworkVariable<Vector2> _mov = new();
@@ -20,6 +22,8 @@ namespace MultiplayerGameJam.Ship
         private const float _maxShipVelocity = 9f;
         private const float _maxRudderTorqueCoefficient = 7f;
 
+        public NetworkVariable<int> Id { private set; get; } = new();
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -27,6 +31,14 @@ namespace MultiplayerGameJam.Ship
             _windMagnitude = 1f;
             _sailLowered.Value = false;
             _rudderTorqueCoefficient.Value = 0f;
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsServer)
+            {
+                Id.Value = _idStatic++;
+            }
         }
 
         private void FixedUpdate()

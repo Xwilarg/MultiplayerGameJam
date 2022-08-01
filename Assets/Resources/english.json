@@ -1,5 +1,7 @@
 {
     "oarsInfo": "Press {0} and {1} to row",
     "sailInfo": "Press {0} to toggle sail deployment",
-    "rudderInfo": "Press {0} and {1} to steer rudder"
+    "rudderInfo": "Press {0} and {1} to steer rudder",
+
+    "enterShip": "Press {0} to enter the ship"
 }
