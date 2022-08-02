@@ -32,9 +32,15 @@ namespace MultiplayerGameJam.Player
         private int _ignorePlayerLayer;
         private GameObject _closeShip;
 
+        private SpriteRenderer _sr;
+        private Animator _anim;
+
         private void Awake()
         {
             _ignorePlayerLayer = ~(1 << LayerMask.NameToLayer("Player"));
+            _sr = GetComponent<SpriteRenderer>();
+            _rb = GetComponent<Rigidbody2D>();
+            _anim = GetComponent<Animator>();
         }
 
         private void Start()
@@ -53,7 +59,6 @@ namespace MultiplayerGameJam.Player
             }
             if (IsServer)
             {
-                _rb = GetComponent<Rigidbody2D>();
                 transform.position = GameObject.FindGameObjectWithTag("Spawn").transform.position;
             }
         }
@@ -107,6 +112,20 @@ namespace MultiplayerGameJam.Player
                 {
                     _rb.velocity += _ship.GetComponent<Rigidbody2D>().velocity;
                 }
+            }
+            if (_rb.velocity.x < 0f)
+            {
+                _sr.flipX = true;
+                _anim.SetBool("IsWalking", true);
+            }
+            else if (_rb.velocity.x > 0f)
+            {
+                _sr.flipX = false;
+                _anim.SetBool("IsWalking", true);
+            }
+            else
+            {
+                _anim.SetBool("IsWalking", _rb.velocity.y != 0f);
             }
         }
 
