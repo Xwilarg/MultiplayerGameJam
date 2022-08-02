@@ -24,7 +24,16 @@ namespace MultiplayerGameJam.Player
         private ShipController _ship;
 
         private NetworkVariable<bool> _isOnEmplacement = new();
-        public Emplacement CurrentEmplacement { set; get; }
+        private Emplacement _currentEmplacement;
+        public Emplacement CurrentEmplacement
+        {
+            set
+            {
+                UIManager.Instance.SetExplanationText(value ? Translate.Instance.Tr("enterDevice", "E") : string.Empty);
+                _currentEmplacement = value;
+            }
+            get => _currentEmplacement;
+        }
 
         private NetworkVariable<FixedString64Bytes> _name = new();
         private TMP_Text _nameContainer;
