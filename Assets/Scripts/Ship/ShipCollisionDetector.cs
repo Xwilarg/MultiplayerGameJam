@@ -21,6 +21,10 @@ namespace MultiplayerGameJam.Ship
             {
 
             }
+            else if (collision.CompareTag("Player"))
+            {
+                // Manage case where player go inside boat
+            }
             else // Any other item we can roll over
             {
                 Destroy(collision.gameObject);
