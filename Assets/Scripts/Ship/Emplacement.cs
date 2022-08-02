@@ -43,6 +43,7 @@ namespace MultiplayerGameJam.Ship
                     EmplacementType.Oars => Translate.Instance.Tr("oarsInfo", "F", "G"),
                     EmplacementType.Sail => Translate.Instance.Tr("sailInfo", "F"),
                     EmplacementType.Rudder => Translate.Instance.Tr("rudderInfo", "F", "G"),
+                    EmplacementType.Anchor => Translate.Instance.Tr("anchorInfo", "F"),
                     _ => throw new NotImplementedException()
                 }
             );
@@ -95,6 +96,10 @@ namespace MultiplayerGameJam.Ship
                     {
 
                     }
+                    break;
+
+                case EmplacementType.Anchor:
+                    _controller.InvertAnchorServerRpc();
                     break;
 
                 default:

@@ -15,6 +15,7 @@ namespace MultiplayerGameJam.Ship
         private Vector2 _windDirection;
         private float _windMagnitude;
         private const float windAccelerationCoeff = 0.1f;
+        private bool _isAnchorDeployed = true;
 
         //Ship properties
         private NetworkVariable<bool> _sailLowered = new();
@@ -45,13 +46,12 @@ namespace MultiplayerGameJam.Ship
         {
             if (IsServer)
             {
-
                 if (_sailLowered.Value)
                 {
                     accelerateBySailServerRpc();
                 }
                 _rb.angularVelocity += _rudderTorqueCoefficient.Value;
-                _rb.velocity /= 1.002f;
+                _rb.velocity /= 1.002f * (_isAnchorDeployed ? 10f : 1f);
                 _rb.angularVelocity /= 1.25f;
             }
         }
@@ -60,6 +60,12 @@ namespace MultiplayerGameJam.Ship
         public void AddRelativeVelocityServerRpc(Vector2 pos)
         {
             _rb.velocity = (pos.y * transform.up + pos.x * transform.right).normalized * 10f;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void InvertAnchorServerRpc()
+        {
+            _isAnchorDeployed = !_isAnchorDeployed;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -78,7 +84,7 @@ namespace MultiplayerGameJam.Ship
         [ServerRpc(RequireOwnership = false)]
         private void accelerateBySailServerRpc()
         {
-            Vector2 shipDirection = new Vector2(
+            Vector2 shipDirection = new(
                 -Mathf.Sin(_rb.rotation * Mathf.Deg2Rad),
                 Mathf.Cos(_rb.rotation * Mathf.Deg2Rad)
             );
