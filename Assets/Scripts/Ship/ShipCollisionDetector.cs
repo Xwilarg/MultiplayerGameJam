@@ -15,7 +15,7 @@ namespace MultiplayerGameJam.Ship
         {
             if (collision.CompareTag("Ship")) // Collide with another ship
             {
-
+                var other = collision.GetComponent<ShipController>();
             }
             else if (collision.CompareTag("Border")) // Collider with the border of the map, we can probably sink the ship
             {
