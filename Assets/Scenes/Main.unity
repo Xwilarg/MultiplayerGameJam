@@ -1411,6 +1411,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7584c655a04f24db106ffeebbc5dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shipMass: 0
+  hullPoint: 0
 --- !u!1 &891321055
 GameObject:
   m_ObjectHideFlags: 0
@@ -2260,6 +2262,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7584c655a04f24db106ffeebbc5dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shipMass: 0
+  hullPoint: 0
 --- !u!1 &1406088871
 GameObject:
   m_ObjectHideFlags: 0
@@ -2509,6 +2513,7 @@ GameObject:
   - component: {fileID: 1752639235}
   - component: {fileID: 1752639234}
   - component: {fileID: 1752639238}
+  - component: {fileID: 1752639239}
   m_Layer: 5
   m_Name: ConnectionCanvas
   m_TagString: Untagged
@@ -2612,6 +2617,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _networkManager: {fileID: 646422909}
+--- !u!114 &1752639239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752639233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19538e2d23643b84c964b0c57291e189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _obstacleMass: 10000
 --- !u!1 &1796911291
 GameObject:
   m_ObjectHideFlags: 0
@@ -2953,6 +2971,8 @@ GameObject:
   - component: {fileID: 1916055528}
   - component: {fileID: 1916055530}
   - component: {fileID: 1916055531}
+  - component: {fileID: 1916055533}
+  - component: {fileID: 1916055532}
   m_Layer: 0
   m_Name: Reference
   m_TagString: Untagged
@@ -3074,6 +3094,31 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1916055532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916055527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19538e2d23643b84c964b0c57291e189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _obstacleMass: 5000
+--- !u!114 &1916055533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916055527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b70923b7722936749a39cf35b327d94a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1924842013
 GameObject:
   m_ObjectHideFlags: 0
