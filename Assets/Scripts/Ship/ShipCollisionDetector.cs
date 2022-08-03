@@ -7,7 +7,7 @@ namespace MultiplayerGameJam.Ship
     {
         private ShipController _controller;
 
-        private const float _restitutionCoefficient = 0.8f;
+        private const float _restitutionCoefficient = 0.3f;
 
         private void Awake()
         {
@@ -18,8 +18,8 @@ namespace MultiplayerGameJam.Ship
         {
             if (collision.CompareTag("Ship")) // Collide with another ship
             { }
-            else if (collision.CompareTag("Border")) // Collider with the border of the map, we can probably sink the ship
-            { }
+            //else if (collision.CompareTag("Border")) // Collider with the border of the map, we can probably sink the ship
+            //{ }
             else if (collision.CompareTag("Player"))
             {
                 // Manage case where player go inside boat

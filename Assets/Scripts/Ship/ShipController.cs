@@ -20,7 +20,7 @@ namespace MultiplayerGameJam.Ship
         //Environment properties
         private Vector2 _windDirection;
         private float _windMagnitude;
-        private const float windAccelerationCoeff = 0.1f;
+        private const float windAccelerationCoeff = 0.03f;
         private bool _isAnchorDeployed = true;
 
         //Ship properties
@@ -58,7 +58,7 @@ namespace MultiplayerGameJam.Ship
                 }
                 _rb.angularVelocity += _rudderTorqueCoefficient.Value;
                 _rb.velocity /= 1.002f * (_isAnchorDeployed ? 10f : 1f);
-                _rb.angularVelocity /= 1.25f;
+                _rb.angularVelocity /= 2f;
             }
         }
 
@@ -102,14 +102,9 @@ namespace MultiplayerGameJam.Ship
             //Only sail when not headwind (i.e. outside No-Go Zone)
             if (sailingAngle > 45f)
             {
-                float newSpeed = _rb.velocity.magnitude + windAccelerationCoeff;
-                //Ensure that velocity does not exceed a capped value
-                if (newSpeed > _maxShipVelocity)
-                {
-                    newSpeed = _maxShipVelocity;
-                }
-                //Accelerate the ship
-                _rb.velocity = shipDirection * newSpeed;
+                if (_rb.velocity.magnitude + windAccelerationCoeff < _maxShipVelocity) {
+                    _rb.velocity = _rb.velocity + shipDirection * windAccelerationCoeff;
+                } 
             }
         }
 
