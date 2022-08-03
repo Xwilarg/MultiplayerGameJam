@@ -5,9 +5,15 @@ namespace MultiplayerGameJam.Ship
 {
     public class ShipController : NetworkBehaviour
     {
+        [SerializeField]
+        internal float _shipMass;
+
+        [SerializeField]
+        internal float hullPoint;
+
         private static int _idStatic = 0;
 
-        private Rigidbody2D _rb;
+        internal Rigidbody2D _rb;
 
         private NetworkVariable<Vector2> _mov = new();
 
@@ -84,10 +90,11 @@ namespace MultiplayerGameJam.Ship
         [ServerRpc(RequireOwnership = false)]
         private void accelerateBySailServerRpc()
         {
-            Vector2 shipDirection = new(
-                -Mathf.Sin(_rb.rotation * Mathf.Deg2Rad),
-                Mathf.Cos(_rb.rotation * Mathf.Deg2Rad)
-            );
+            Vector2 shipDirection =
+                new(
+                    -Mathf.Sin(_rb.rotation * Mathf.Deg2Rad),
+                    Mathf.Cos(_rb.rotation * Mathf.Deg2Rad)
+                );
             //Calculate angle between sailing direction and wind direction
             float sailingAngle =
                 Mathf.Acos(Vector2.Dot(shipDirection, _windDirection * -1)) * 180 / Mathf.PI;
@@ -117,6 +124,11 @@ namespace MultiplayerGameJam.Ship
             {
                 _rudderTorqueCoefficient.Value -= 0.03f;
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        internal void setVelocityServerRpc(Vector2 velocity) {
+            this._rb.velocity = velocity;
         }
     }
 }
