@@ -15,9 +15,14 @@ namespace MultiplayerGameJam.UI
         [SerializeField]
         private TMP_Text _explanationText;
 
+        [SerializeField]
+        private TMP_InputField _playerName;
+
         public void SetExplanationText(string text)
         {
             _explanationText.text = text;
         }
+
+        public string PlayerName => string.IsNullOrWhiteSpace(_playerName.text) ? "Unnamed Pirate" : _playerName.text;
     }
 }

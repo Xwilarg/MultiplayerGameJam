@@ -4,6 +4,7 @@
     {
         Oars,
         Sail,
-        Rudder
+        Rudder,
+        Anchor
     }
 }

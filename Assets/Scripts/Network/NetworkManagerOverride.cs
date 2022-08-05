@@ -1,6 +1,8 @@
 using System;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace MultiplayerGameJam.Network
 {
@@ -12,12 +14,19 @@ namespace MultiplayerGameJam.Network
         private void Awake()
         {
             _transport = GetComponent<UnityTransport>();
-            _transport.SetConnectionData("127.0.0.1", 8989);
+            _transport.SetConnectionData("51.159.6.4", 8989);
+            /*
             _sessionM = new();
             OnClientConnectedCallback += (clientId) =>
             {
                 _sessionM.AddConnection(clientId, Guid.NewGuid().ToString());
-            };
+            };*/
+
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) // Is running headless
+            {
+                Debug.Log("Starting server");
+                StartServer();
+            }
         }
     }
 }

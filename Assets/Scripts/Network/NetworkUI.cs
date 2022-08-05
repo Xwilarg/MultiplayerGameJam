@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode.Transports.UTP;
+using UnityEngine;
 
 namespace MultiplayerGameJam.Network
 {
@@ -7,9 +8,17 @@ namespace MultiplayerGameJam.Network
         [SerializeField]
         private NetworkManagerOverride _networkManager;
 
-        public void Host()
+        public void HostDebug()
         {
+            _networkManager.GetComponent<UnityTransport>().ConnectionData.Address = "127.0.0.1";
             _networkManager.StartHost();
+            gameObject.SetActive(false);
+        }
+
+        public void ClientDebug()
+        {
+            _networkManager.GetComponent<UnityTransport>().ConnectionData.Address = "127.0.0.1";
+            _networkManager.StartClient();
             gameObject.SetActive(false);
         }
 
