@@ -17,10 +17,12 @@ namespace MultiplayerGameJam.Ship
             {
                 var other = collision.GetComponentInParent<ShipController>();
             }
+            /*
             else if (collision.CompareTag("Border")) // Collider with the border of the map, we can probably sink the ship
             {
 
             }
+            */
             else if (collision.CompareTag("Player"))
             {
                 // Manage case where player go inside boat
