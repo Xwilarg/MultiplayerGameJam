@@ -5,24 +5,40 @@ namespace MultiplayerGameJam.Ship
 {
     public class ShipController : NetworkBehaviour
     {
+        //Constants
+        //Max Ship velocity restriction
+        private const float _maxShipVelocity = 9f;
+        //Max Ship torque restriction
+        private const float _maxRudderTorqueCoefficient = 7f;
+
+
+        //Static counter for incrementing unique Ids of ships
         private static int _idStatic = 0;
 
+        //RigidBody 
         private Rigidbody2D _rb;
 
+        //We probably don't need this
         private NetworkVariable<Vector2> _mov = new();
 
         //Environment properties
+        //Wind direction vector - this should be a unit vector
         private Vector2 _windDirection;
+        //Magnitude of wind vector
         private float _windMagnitude;
+        //We probably don't need this
         private const float windAccelerationCoeff = 0.1f;
-        private bool _isAnchorDeployed = true;
+        //Boolean for anchor deployment
+        private bool _isAnchorDeployed;
 
         //Ship properties
+        //Boolean for raising or lowering of sail - we can change this to float later
         private NetworkVariable<bool> _sailLowered = new();
+        //TODO - This needs rework
         private NetworkVariable<float> _rudderTorqueCoefficient = new();
-        private const float _maxShipVelocity = 9f;
-        private const float _maxRudderTorqueCoefficient = 7f;
 
+
+        //Unique ID of ships
         public NetworkVariable<int> Id { private set; get; } = new();
 
         private void Awake()
@@ -30,10 +46,12 @@ namespace MultiplayerGameJam.Ship
             _rb = GetComponent<Rigidbody2D>();
             _windDirection = Vector2.up;
             _windMagnitude = 1f;
+            _isAnchorDeployed = false;
             _sailLowered.Value = false;
             _rudderTorqueCoefficient.Value = 0f;
         }
 
+        //Assign unique Id to ship
         public override void OnNetworkSpawn()
         {
             if (IsServer)
@@ -48,12 +66,29 @@ namespace MultiplayerGameJam.Ship
             {
                 if (_sailLowered.Value)
                 {
-                    accelerateBySailServerRpc();
+                    this._rb.AddForce(this.DetermineForce());
                 }
                 _rb.angularVelocity += _rudderTorqueCoefficient.Value;
                 _rb.velocity /= 1.002f * (_isAnchorDeployed ? 10f : 1f);
                 _rb.angularVelocity /= 1.25f;
             }
+        }
+
+        private Vector2 DetermineForce() {
+            //Rotation of boat as unit vector
+             Vector2 shipDirection = new(
+                -Mathf.Sin(_rb.rotation * Mathf.Deg2Rad),
+                Mathf.Cos(_rb.rotation * Mathf.Deg2Rad)
+            );
+            //Calculate angle between sailing direction and wind direction
+            float sailingAngle =
+                Mathf.Acos(Vector2.Dot(shipDirection, _windDirection * -1)) * 180 / Mathf.PI;
+                //Only sail when not headwind (i.e. outside No-Go Zone)
+            if (sailingAngle > 45f) {
+                float newSpeed = _rb.velocity.magnitude + windAccelerationCoeff;
+                return shipDirection * _windMagnitude;
+            }
+            return Vector2.zero;
         }
 
         [ServerRpc(RequireOwnership = false)] // TODO: Bad idea
