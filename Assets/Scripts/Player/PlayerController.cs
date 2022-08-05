@@ -29,7 +29,9 @@ namespace MultiplayerGameJam.Player
         {
             set
             {
-                UIManager.Instance.SetExplanationText(value ? Translate.Instance.Tr("enterDevice", "E") : string.Empty);
+                UIManager.Instance.SetExplanationText(
+                    value ? Translate.Instance.Tr("enterDevice", "E") : string.Empty
+                );
                 _currentEmplacement = value;
             }
             get => _currentEmplacement;
@@ -75,9 +77,16 @@ namespace MultiplayerGameJam.Player
         [ServerRpc]
         private void SetShipServerRpc(int id)
         {
-            _ship = GameObject.FindGameObjectsWithTag("Ship").FirstOrDefault(x => x.GetComponent<ShipController>().Id.Value == id).GetComponent<ShipController>();
+            GameObject shipObject = GameObject
+                .FindGameObjectsWithTag("Ship")
+                .FirstOrDefault(x => x.GetComponent<ShipController>().Id.Value == id);
+            _ship = shipObject.GetComponent<ShipController>();
             transform.parent = _ship.transform;
-            transform.localPosition = Vector2.zero;
+            Physics2D.IgnoreCollision(
+                GetComponent<BoxCollider2D>(),
+                shipObject.GetComponent<BoxCollider2D>()
+            );
+            transform.localPosition = new Vector2(0f, -0.2f);
         }
 
         [ServerRpc]
@@ -122,6 +131,8 @@ namespace MultiplayerGameJam.Player
                     _rb.velocity += _ship.GetComponent<Rigidbody2D>().velocity;
                 }
             }
+
+            //Animations
             if (_rb.velocity.x < 0f)
             {
                 _sr.flipX = true;
@@ -175,7 +186,10 @@ namespace MultiplayerGameJam.Player
                 if (_ship == null && _closeShip != null)
                 {
                     UIManager.Instance.SetExplanationText(string.Empty);
-                    SetShipServerRpc(_closeShip.GetComponent<ShipController>()?.Id?.Value ?? _closeShip.GetComponentInParent<ShipController>().Id.Value);
+                    SetShipServerRpc(
+                        _closeShip.GetComponent<ShipController>()?.Id?.Value
+                            ?? _closeShip.GetComponentInParent<ShipController>().Id.Value
+                    );
                 }
                 else if (value.performed && CurrentEmplacement != null)
                 {
