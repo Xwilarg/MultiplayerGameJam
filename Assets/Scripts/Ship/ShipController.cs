@@ -27,7 +27,7 @@ namespace MultiplayerGameJam.Ship
         //Magnitude of wind vector
         private float _windMagnitude;
         //We probably don't need this
-        private const float windAccelerationCoeff = 0.1f;
+        private const float windAccelerationCoeff = 5000f;
         //Boolean for anchor deployment
         private bool _isAnchorDeployed;
 
@@ -86,7 +86,7 @@ namespace MultiplayerGameJam.Ship
                 //Only sail when not headwind (i.e. outside No-Go Zone)
             if (sailingAngle > 45f) {
                 float newSpeed = _rb.velocity.magnitude + windAccelerationCoeff;
-                return shipDirection * _windMagnitude;
+                return shipDirection * _windMagnitude * windAccelerationCoeff;
             }
             return Vector2.zero;
         }
