@@ -8,8 +8,8 @@ namespace MultiplayerGameJam.Ship
         //Constants
         //Max Ship velocity restriction
         private const float _maxShipVelocity = 9f;
-        //Max Ship torque restriction
-        private const float _maxRudderTorqueCoefficient = 7f;
+        //Max RudderAngle
+        private const float _maxRudderAngle = 60f * Mathf.Deg2Rad; //In radian
 
 
         //Static counter for incrementing unique Ids of ships
@@ -17,6 +17,8 @@ namespace MultiplayerGameJam.Ship
 
         //RigidBody 
         private Rigidbody2D _rb;
+
+        private Transform _rudderTransform;
 
         //We probably don't need this
         private NetworkVariable<Vector2> _mov = new();
@@ -32,10 +34,8 @@ namespace MultiplayerGameJam.Ship
         private bool _isAnchorDeployed;
 
         //Ship properties
-        //Boolean for raising or lowering of sail - we can change this to float later
+        //Boolean for raising or lowering of sail
         private NetworkVariable<bool> _sailLowered = new();
-        //TODO - This needs rework
-        private NetworkVariable<float> _rudderTorqueCoefficient = new();
 
 
         //Unique ID of ships
@@ -44,11 +44,11 @@ namespace MultiplayerGameJam.Ship
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _rudderTransform = _rb.transform.Find("Rudder");
             _windDirection = Vector2.up;
             _windMagnitude = 1f;
             _isAnchorDeployed = false;
             _sailLowered.Value = false;
-            _rudderTorqueCoefficient.Value = 0f;
         }
 
         //Assign unique Id to ship
@@ -68,7 +68,7 @@ namespace MultiplayerGameJam.Ship
                 {
                     this._rb.AddForce(this.DetermineForce());
                 }
-                _rb.angularVelocity += _rudderTorqueCoefficient.Value;
+                //_rb.angularVelocity += _rudderTorqueCoefficient.Value;
                 _rb.velocity /= 1.002f * (_isAnchorDeployed ? 10f : 1f);
                 _rb.angularVelocity /= 1.25f;
             }
@@ -144,13 +144,16 @@ namespace MultiplayerGameJam.Ship
         [ServerRpc(RequireOwnership = false)]
         internal void SteerRudderServerRpc(bool direction)
         {
-            if (direction && _rudderTorqueCoefficient.Value < _maxRudderTorqueCoefficient)
+            Debug.Log(_maxRudderAngle);
+            if (direction && _rudderTransform.rotation.z > -_maxRudderAngle / 2f)
             {
-                _rudderTorqueCoefficient.Value += 0.03f;
+                Debug.Log(_rudderTransform.rotation.z + " " + (_rudderTransform.rotation.z > -_maxRudderAngle));
+                _rudderTransform.Rotate(new Vector3(0f, 0f, -1f), Space.Self);
             }
-            else if (_rudderTorqueCoefficient.Value > -_maxRudderTorqueCoefficient)
+            else if (_rudderTransform.rotation.z < _maxRudderAngle / 2f)
             {
-                _rudderTorqueCoefficient.Value -= 0.03f;
+                Debug.Log(_rudderTransform.rotation.z + " " + (_rudderTransform.rotation.z < _maxRudderAngle));
+                _rudderTransform.Rotate(new Vector3(0f, 0f, 1f), Space.Self);
             }
         }
     }
