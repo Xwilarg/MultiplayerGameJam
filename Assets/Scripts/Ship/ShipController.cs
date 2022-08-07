@@ -10,6 +10,8 @@ namespace MultiplayerGameJam.Ship
         private const float _maxShipVelocity = 9f;
         //Max RudderAngle
         private const float _maxRudderAngle = 60f * Mathf.Deg2Rad; //In radian
+        //Torque Increment value
+        private const float _torqueIncrement = 2000f;
 
 
         //Static counter for incrementing unique Ids of ships
@@ -36,6 +38,8 @@ namespace MultiplayerGameJam.Ship
         //Ship properties
         //Boolean for raising or lowering of sail
         private NetworkVariable<bool> _sailLowered = new();
+        //Torque sum
+        private NetworkVariable<float> _rudderTorque = new();
 
 
         //Unique ID of ships
@@ -49,6 +53,7 @@ namespace MultiplayerGameJam.Ship
             _windMagnitude = 1f;
             _isAnchorDeployed = false;
             _sailLowered.Value = false;
+            _rudderTorque.Value = 0f;
         }
 
         //Assign unique Id to ship
@@ -68,7 +73,7 @@ namespace MultiplayerGameJam.Ship
                 {
                     this._rb.AddForce(this.DetermineForce());
                 }
-                //_rb.angularVelocity += _rudderTorqueCoefficient.Value;
+                _rb.AddTorque(_rudderTorque.Value);
                 _rb.velocity /= 1.002f * (_isAnchorDeployed ? 10f : 1f);
                 _rb.angularVelocity /= 1.25f;
             }
@@ -147,13 +152,13 @@ namespace MultiplayerGameJam.Ship
             Debug.Log(_maxRudderAngle);
             if (direction && _rudderTransform.rotation.z > -_maxRudderAngle / 2f)
             {
-                Debug.Log(_rudderTransform.rotation.z + " " + (_rudderTransform.rotation.z > -_maxRudderAngle));
                 _rudderTransform.Rotate(new Vector3(0f, 0f, -1f), Space.Self);
+                _rudderTorque.Value -= _torqueIncrement;
             }
             else if (_rudderTransform.rotation.z < _maxRudderAngle / 2f)
             {
-                Debug.Log(_rudderTransform.rotation.z + " " + (_rudderTransform.rotation.z < _maxRudderAngle));
                 _rudderTransform.Rotate(new Vector3(0f, 0f, 1f), Space.Self);
+                _rudderTorque.Value += _torqueIncrement;
             }
         }
     }
